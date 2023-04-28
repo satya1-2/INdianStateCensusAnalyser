@@ -25,6 +25,15 @@ public class CensusAnalyserTest {
             System.out.println(e.toString());
         }
     }
+
+    @Test
+    public void incorrectTypeThrowCustomException() throws CsvValidationException, IOException {
+        CensusAnalyser censusAnalyser = new CensusAnalyser();
+        int count = 0;
+        count = censusAnalyser.analyser();
+        Assert.assertEquals(4, count);
+    }
 }
+
 
 
