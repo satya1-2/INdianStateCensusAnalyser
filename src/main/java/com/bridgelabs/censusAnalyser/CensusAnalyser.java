@@ -13,36 +13,50 @@ public class CensusAnalyser {
     public int analyser() throws IOException, CsvValidationException {
         int count = 0;
         int lineNumber = 0;
-        List<Census> censusData = new ArrayList<>();
+        List<Census> censusList = new ArrayList<>();
+        File file;
+        CSVReader reader;
         try {
-            File file = new File("census.csv");
-            CSVReader csvReader = new CSVReader(new FileReader(file));
+            try {
+                file = new File("census.csv");
+                reader = new CSVReader(new FileReader(file));
+            } catch (RuntimeException e) {
+                throw new DelimiterException();
+            }
+
             String[] line;
-            while ((line = csvReader.readNext()) != null) {
-                if (lineNumber == 0) {
-                    lineNumber++;
-                    continue;
+            try {
+                while ((line = reader.readNext()) != null) {
+                    if (lineNumber == 0) {
+                        lineNumber++;
+                        continue;
+                    }
+                    ++count;
+                    try {
+                        censusList.add(new Census(Integer.valueOf(line[0]), line[1], line[2]));
+                    } catch (NumberFormatException e) {
+                        throw new IncorrectType();
+                    }
                 }
-                ++count;
-                try {
-                    censusData.add(new Census(Integer.valueOf(line[0]), line[1], line[2]));
-                } catch (NumberFormatException e) {
-                    throw new IncorrectType();
-                }
+            } catch (com.opencsv.exceptions.CsvMalformedLineException e) {
+                throw new DelimiterException();
             }
-            if (count != censusData.size() - 1) {
-                throw new IncorrectType();
+            if (count != censusList.size() - 1) {
+                throw new DelimiterException();
             }
-            censusData.forEach(System.out::println);
-        } catch (IncorrectType e) {
-            System.out.println(e);
+            censusList.forEach(System.out::println);
+
+        } catch (IncorrectType exp) {
+            System.out.println(exp);
+        } catch (DelimiterException exception) {
+            System.out.println(exception);
         }
         return count;
     }
 
-    public static void main(String[] args) throws CsvValidationException, IOException {
+    public static void main(String[] args) throws Exception {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
-        int numberOfLines = censusAnalyser.analyser();
-        System.out.println(numberOfLines);
+        int noOfLines = censusAnalyser.analyser();
+        System.out.println(noOfLines);
     }
 }

@@ -33,7 +33,16 @@ public class CensusAnalyserTest {
         count = censusAnalyser.analyser();
         Assert.assertEquals(4, count);
     }
+
+    @Test
+    public void incorrectDelimiterThrowCustomException() throws CsvValidationException, IOException {
+        CensusAnalyser censusAnalyser = new CensusAnalyser();
+        int count = 0;
+        count = censusAnalyser.analyser();
+        Assert.assertEquals(4, count);
+    }
 }
+
 
 
 
