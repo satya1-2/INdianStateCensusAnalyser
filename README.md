@@ -1,1 +1,1 @@
-welcome to INdian State CensusAnalyser
+welcome to Indian State CensusAnalyser
